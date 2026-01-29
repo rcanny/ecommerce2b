@@ -37,6 +37,67 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
 }
 
 export default function Contact() {
+    const [formData, setFormData] = useState({
+        nome: '',
+        sobrenome: '',
+        email: '',
+        empresa: '',
+        telefone: '',
+        site: '',
+        mensagem: ''
+    })
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target
+        setFormData(prev => ({ ...prev, [name]: value }))
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setStatus('loading')
+
+        const payload = {
+            nome: `${formData.nome} ${formData.sobrenome}`.trim(),
+            email: formData.email,
+            telefone: formData.telefone,
+            mensagem: `Empresa: ${formData.empresa}\nSite: ${formData.site}\n\n${formData.mensagem}`
+        }
+
+        try {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbx6fErX1GVuWiFcnWlZREpQiS19BHXgy3_Jnd6JtsbS6Ic7wTFf6c3pwT2LOqytyaI3dw/exec', {
+                method: 'POST', // Usually GAS uses POST
+                headers: {
+                    'Content-Type': 'text/plain', // Avoid CORS preflight options request
+                },
+                body: JSON.stringify(payload)
+            })
+
+            // Google Apps Script usually returns a 200 even on some script logic errors, 
+            // but fetch will throw on network errors.
+            // Check if response is ok.
+            if (response.ok) {
+                setStatus('success')
+                setFormData({
+                    nome: '',
+                    sobrenome: '',
+                    email: '',
+                    empresa: '',
+                    telefone: '',
+                    site: '',
+                    mensagem: ''
+                })
+                // Reset success message after 5 seconds to allow new submissions if needed
+                setTimeout(() => setStatus('idle'), 5000)
+            } else {
+                setStatus('error')
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error)
+            setStatus('error')
+        }
+    }
+
     return (
         <section id="contato" className="relative z-20 -mt-[50px] bg-deep-onyx rounded-t-[3rem] shadow-[0_-25px_60px_-12px_rgba(0,0,0,0.8)] pt-24 pb-24 px-6 overflow-hidden">
             {/* Background Grid */}
@@ -53,22 +114,32 @@ export default function Contact() {
                     </h2>
                 </div>
 
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-6" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm text-gray-400 font-medium ml-1">Nome <span className="text-action-green">*</span></label>
                             <input
+                                name="nome"
+                                value={formData.nome}
+                                onChange={handleChange}
                                 type="text"
+                                required
                                 placeholder="Digite seu nome"
-                                className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300"
+                                disabled={status === 'loading'}
+                                className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 disabled:opacity-50"
                             />
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm text-gray-400 font-medium ml-1">Sobrenome <span className="text-action-green">*</span></label>
                             <input
+                                name="sobrenome"
+                                value={formData.sobrenome}
+                                onChange={handleChange}
                                 type="text"
+                                required
                                 placeholder="Digite seu sobrenome"
-                                className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300"
+                                disabled={status === 'loading'}
+                                className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 disabled:opacity-50"
                             />
                         </div>
                     </div>
@@ -76,18 +147,28 @@ export default function Contact() {
                     <div className="space-y-2">
                         <label className="text-sm text-gray-400 font-medium ml-1">E-mail <span className="text-action-green">*</span></label>
                         <input
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
                             type="email"
+                            required
                             placeholder="Digite seu melhor E-mail"
-                            className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300"
+                            disabled={status === 'loading'}
+                            className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 disabled:opacity-50"
                         />
                     </div>
 
                     <div className="space-y-2">
                         <label className="text-sm text-gray-400 font-medium ml-1">Empresa <span className="text-action-green">*</span></label>
                         <input
+                            name="empresa"
+                            value={formData.empresa}
+                            onChange={handleChange}
                             type="text"
+                            required
                             placeholder="Digite o nome da empresa"
-                            className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300"
+                            disabled={status === 'loading'}
+                            className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 disabled:opacity-50"
                         />
                     </div>
 
@@ -95,17 +176,27 @@ export default function Contact() {
                         <div className="space-y-2">
                             <label className="text-sm text-gray-400 font-medium ml-1">Telefone <span className="text-action-green">*</span></label>
                             <input
+                                name="telefone"
+                                value={formData.telefone}
+                                onChange={handleChange}
                                 type="tel"
+                                required
                                 placeholder="(11) 99999-9999"
-                                className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300"
+                                disabled={status === 'loading'}
+                                className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 disabled:opacity-50"
                             />
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm text-gray-400 font-medium ml-1">Site <span className="text-action-green">*</span></label>
                             <input
+                                name="site"
+                                value={formData.site}
+                                onChange={handleChange}
                                 type="url"
+                                required
                                 placeholder="https://seu-site.com"
-                                className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300"
+                                disabled={status === 'loading'}
+                                className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 disabled:opacity-50"
                             />
                         </div>
                     </div>
@@ -113,21 +204,44 @@ export default function Contact() {
                     <div className="space-y-2">
                         <label className="text-sm text-gray-400 font-medium ml-1">Perguntas ou Comentários <span className="text-action-green">*</span></label>
                         <textarea
+                            name="mensagem"
+                            value={formData.mensagem}
+                            onChange={handleChange}
                             rows={4}
+                            required
                             placeholder="Digite aqui sua mensagem..."
-                            className="w-full p-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 resize-none"
+                            disabled={status === 'loading'}
+                            className="w-full p-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 resize-none disabled:opacity-50"
                         ></textarea>
                     </div>
 
-                    <div className="pt-8 flex justify-center">
+                    <div className="pt-8 flex flex-col items-center">
                         <MagneticButton>
-                            <button className="relative px-12 py-5 rounded-full bg-action-green text-black font-bold text-lg overflow-hidden shadow-[0_0_20px_rgba(108,201,45,0.4)] hover:scale-105 transition-all duration-500 group cursor-pointer w-full md:w-auto">
+                            <button
+                                type="submit"
+                                disabled={status === 'loading' || status === 'success'}
+                                className="relative px-12 py-5 rounded-full bg-action-green text-black font-bold text-lg overflow-hidden shadow-[0_0_20px_rgba(108,201,45,0.4)] hover:scale-105 transition-all duration-500 group cursor-pointer w-full md:w-auto disabled:grayscale disabled:hover:scale-100"
+                            >
                                 <span className="relative z-10 flex items-center justify-center gap-2">
-                                    Iniciar Projeto
+                                    {status === 'loading' ? 'Enviando...' : status === 'success' ? 'Enviado!' : 'Iniciar Projeto'}
                                 </span>
-                                <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg] rotate-45 animate-[shine_5s_cubic-bezier(0.42,0,0.58,1)_infinite]" />
+                                {status !== 'loading' && status !== 'success' && (
+                                    <div className="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg] rotate-45 animate-[shine_5s_cubic-bezier(0.42,0,0.58,1)_infinite]" />
+                                )}
                             </button>
                         </MagneticButton>
+
+                        {status === 'success' && (
+                            <p className="mt-4 text-action-green font-medium animate-in fade-in slide-in-from-bottom-2">
+                                Obrigado! Entraremos em contato em breve.
+                            </p>
+                        )}
+
+                        {status === 'error' && (
+                            <p className="mt-4 text-red-500 font-medium animate-in fade-in slide-in-from-bottom-2">
+                                Erro ao enviar. Tente novamente.
+                            </p>
+                        )}
                     </div>
                 </form>
             </div>
