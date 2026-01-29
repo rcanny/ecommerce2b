@@ -154,7 +154,7 @@ export default function Testimonials() {
                             />
 
                             {/* Card Content Block */}
-                            <div className="relative bg-black/5 backdrop-blur-sm rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-10px_rgba(108,201,45,0.15)] overflow-hidden h-full">
+                            <div className={`relative bg-black/5 ${isMobile ? '' : 'backdrop-blur-sm'} rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-10px_rgba(108,201,45,0.15)] overflow-hidden h-full`}>
                                 {/* Note: Removed outer border since we have the wrapper border */}
 
                                 {/* Noise Texture */}

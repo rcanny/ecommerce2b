@@ -6,6 +6,39 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { ArrowRight, Play } from 'lucide-react'
 import HeroGlobeWrapper from './HeroGlobeWrapper'
 
+function MagneticButton({ children }: { children: React.ReactNode }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+
+    const handleMouse = (e: React.MouseEvent) => {
+        const { clientX, clientY } = e;
+        const rect = ref.current?.getBoundingClientRect();
+        if (rect) {
+            const x = clientX - (rect.left + rect.width / 2);
+            const y = clientY - (rect.top + rect.height / 2);
+            setPosition({ x: x * 0.15, y: y * 0.15 });
+        }
+    }
+
+    const reset = () => {
+        setPosition({ x: 0, y: 0 });
+    }
+
+    const { x, y } = position;
+
+    return (
+        <motion.div
+            ref={ref}
+            onMouseMove={handleMouse}
+            onMouseLeave={reset}
+            animate={{ x, y }}
+            transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+        >
+            {children}
+        </motion.div>
+    )
+}
+
 export default function Hero() {
     const containerRef = useRef<HTMLDivElement>(null)
     const { scrollYProgress } = useScroll({
@@ -33,9 +66,7 @@ export default function Hero() {
     const pointerEvents3 = useTransform(smoothProgress, (val) => val > 0.75 ? 'auto' : 'none')
 
     return (
-
-
-        <div id="hero" ref={containerRef} className="relative h-[170svh] bg-transparent">
+        <div id="hero" ref={containerRef} className="relative h-[210svh] bg-transparent">
             {/* Fixed Background Layer to prevent Mobile Jitter */}
             <div
                 className="fixed inset-0 w-full h-[100svh] min-h-[100svh] z-[-1] bg-deep-onyx"
@@ -71,7 +102,7 @@ export default function Hero() {
                         {/* SCENE 1: 0% - 20% */}
                         <motion.div
                             style={{ opacity: opacity1, y: y1, pointerEvents: pointerEvents1 }}
-                            className="absolute inset-0 flex flex-col justify-center"
+                            className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
                         >
                             <h1 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
                                 E-commerce
@@ -115,7 +146,7 @@ export default function Hero() {
                         {/* SCENE 2: 25% - 75% */}
                         <motion.div
                             style={{ opacity: opacity2, y: y2, pointerEvents: pointerEvents2 }}
-                            className="absolute inset-0 flex flex-col justify-center"
+                            className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
                         >
                             <h2 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
                                 Engenharia de
@@ -131,7 +162,7 @@ export default function Hero() {
                         {/* SCENE 3: 80% - 100% */}
                         <motion.div
                             style={{ opacity: opacity3, y: y3, pointerEvents: pointerEvents3 }}
-                            className="absolute inset-0 flex flex-col justify-center"
+                            className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
                         >
                             <h2 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
                                 Pronto para
@@ -161,38 +192,5 @@ export default function Hero() {
                 </motion.div>
             </div>
         </div>
-    )
-}
-
-function MagneticButton({ children }: { children: React.ReactNode }) {
-    const ref = useRef<HTMLDivElement>(null);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-
-    const handleMouse = (e: React.MouseEvent) => {
-        const { clientX, clientY } = e;
-        const rect = ref.current?.getBoundingClientRect();
-        if (rect) {
-            const x = clientX - (rect.left + rect.width / 2);
-            const y = clientY - (rect.top + rect.height / 2);
-            setPosition({ x: x * 0.15, y: y * 0.15 });
-        }
-    }
-
-    const reset = () => {
-        setPosition({ x: 0, y: 0 });
-    }
-
-    const { x, y } = position;
-
-    return (
-        <motion.div
-            ref={ref}
-            onMouseMove={handleMouse}
-            onMouseLeave={reset}
-            animate={{ x, y }}
-            transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-        >
-            {children}
-        </motion.div>
     )
 }
