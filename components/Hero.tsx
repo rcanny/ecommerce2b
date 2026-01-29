@@ -6,9 +6,12 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { ArrowRight, Play } from 'lucide-react'
 import HeroGlobeWrapper from './HeroGlobeWrapper'
 
+import { useIsMobile } from '@/hooks/useIsMobile'
+
 function MagneticButton({ children }: { children: React.ReactNode }) {
     const ref = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
+    const isMobile = useIsMobile();
 
     const handleMouse = (e: React.MouseEvent) => {
         const { clientX, clientY } = e;
@@ -29,9 +32,9 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
     return (
         <motion.div
             ref={ref}
-            onMouseMove={handleMouse}
-            onMouseLeave={reset}
-            animate={{ x, y }}
+            onMouseMove={isMobile ? undefined : handleMouse}
+            onMouseLeave={isMobile ? undefined : reset}
+            animate={isMobile ? { x: 0, y: 0 } : { x, y }}
             transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
         >
             {children}
@@ -53,23 +56,23 @@ export default function Hero() {
     })
 
     // Text transforms - Scene 1 (Hero)
-    const opacity1 = useTransform(smoothProgress, [0, 0.2, 0.25], [1, 1, 0])
+    const opacity1 = useTransform(smoothProgress, [0, 0.2, 0.35], [1, 1, 0])
     // Parallax effect: moves up slightly as user scrolls, creating depth
-    const y1 = useTransform(smoothProgress, [0, 0.25], [0, -50])
-    const pointerEvents1 = useTransform(smoothProgress, (val) => val > 0.25 ? 'none' : 'auto')
+    const y1 = useTransform(smoothProgress, [0, 0.35], [0, -50])
+    const pointerEvents1 = useTransform(smoothProgress, (val) => val > 0.35 ? 'none' : 'auto')
 
     // Scene 2
-    const opacity2 = useTransform(smoothProgress, [0.2, 0.25, 0.75, 0.8], [0, 1, 1, 0])
-    const y2 = useTransform(smoothProgress, [0.2, 0.25, 0.75, 0.8], [50, 0, 0, -50])
+    const opacity2 = useTransform(smoothProgress, [0.2, 0.35, 0.65, 0.8], [0, 1, 1, 0])
+    const y2 = useTransform(smoothProgress, [0.2, 0.35, 0.65, 0.8], [50, 0, 0, -50])
     const pointerEvents2 = useTransform(smoothProgress, (val) => (val > 0.2 && val < 0.8) ? 'auto' : 'none')
 
     // Scene 3
-    const opacity3 = useTransform(smoothProgress, [0.75, 0.8, 1], [0, 1, 1])
-    const y3 = useTransform(smoothProgress, [0.75, 0.8, 1], [50, 0, 0])
-    const pointerEvents3 = useTransform(smoothProgress, (val) => val > 0.75 ? 'auto' : 'none')
+    const opacity3 = useTransform(smoothProgress, [0.65, 0.8, 1], [0, 1, 1])
+    const y3 = useTransform(smoothProgress, [0.65, 0.8, 1], [50, 0, 0])
+    const pointerEvents3 = useTransform(smoothProgress, (val) => val > 0.65 ? 'auto' : 'none')
 
     return (
-        <div id="hero" ref={containerRef} className="relative h-[210svh] bg-transparent">
+        <div id="hero" ref={containerRef} className="relative h-[180svh] bg-transparent" style={{ touchAction: 'pan-y' }}>
             {/* Fixed Background Layer to prevent Mobile Jitter */}
             <div
                 className="fixed inset-0 w-full h-[100svh] min-h-[100svh] z-[-1] bg-deep-onyx"
@@ -104,7 +107,7 @@ export default function Hero() {
 
                         {/* SCENE 1: 0% - 20% */}
                         <motion.div
-                            style={{ opacity: opacity1, y: y1, pointerEvents: pointerEvents1, willChange: "transform" }}
+                            style={{ opacity: opacity1, y: y1, pointerEvents: pointerEvents1, willChange: "transform", contain: "paint" }}
                             className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
                         >
                             <h1 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
@@ -148,7 +151,7 @@ export default function Hero() {
 
                         {/* SCENE 2: 25% - 75% */}
                         <motion.div
-                            style={{ opacity: opacity2, y: y2, pointerEvents: pointerEvents2, willChange: "transform" }}
+                            style={{ opacity: opacity2, y: y2, pointerEvents: pointerEvents2, willChange: "transform", contain: "paint" }}
                             className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
                         >
                             <h2 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
@@ -164,7 +167,7 @@ export default function Hero() {
 
                         {/* SCENE 3: 80% - 100% */}
                         <motion.div
-                            style={{ opacity: opacity3, y: y3, pointerEvents: pointerEvents3, willChange: "transform" }}
+                            style={{ opacity: opacity3, y: y3, pointerEvents: pointerEvents3, willChange: "transform", contain: "paint" }}
                             className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
                         >
                             <h2 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
