@@ -214,6 +214,14 @@ function Scene({ scrollProgress, mouseX, mouseY }: { scrollProgress: MotionValue
 export default function Globe3D({ scrollProgress }: { scrollProgress: MotionValue<number> }) {
     const mouseX = useMotionValue(0)
     const mouseY = useMotionValue(0)
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
 
     // Smooth Spring for mouse (Refined Weight)
     const springConfig = { stiffness: 50, damping: 20, mass: 1 }
@@ -240,7 +248,7 @@ export default function Globe3D({ scrollProgress }: { scrollProgress: MotionValu
                 stencil: false,
                 depth: true
             }}
-            dpr={[1, 2]}
+            dpr={[1, 1.5]}
             camera={{ position: [0, 0, 8], fov: 40, near: 0.1, far: 200 }}
         >
             <color attach="background" args={['#000000']} />
@@ -262,14 +270,16 @@ export default function Globe3D({ scrollProgress }: { scrollProgress: MotionValu
                 />
             </Suspense>
 
-            <EffectComposer enableNormalPass={false}>
-                <Bloom
-                    luminanceThreshold={0.15} // Glow mostly on highlights
-                    mipmapBlur
-                    intensity={1.5}
-                    radius={0.7}
-                />
-            </EffectComposer>
+            {!isMobile && (
+                <EffectComposer enableNormalPass={false}>
+                    <Bloom
+                        luminanceThreshold={0.15} // Glow mostly on highlights
+                        mipmapBlur
+                        intensity={1.5}
+                        radius={0.7}
+                    />
+                </EffectComposer>
+            )}
         </Canvas>
     )
 }

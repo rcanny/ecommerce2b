@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${inter.variable} ${jakarta.variable} antialiased bg-deep-onyx text-white overflow-x-hidden selection:bg-logo-blue selection:text-white`}
+        className={`${inter.variable} ${jakarta.variable} antialiased bg-deep-onyx text-white selection:bg-logo-blue selection:text-white`}
       >
         <noscript>
           <iframe
@@ -44,7 +44,7 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-        <Script id="gtm" strategy="afterInteractive">
+        <Script id="gtm" strategy="lazyOnload">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=

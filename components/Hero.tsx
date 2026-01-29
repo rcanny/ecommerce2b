@@ -7,7 +7,7 @@ import { ArrowRight, Play } from 'lucide-react'
 
 const Globe3D = dynamic(() => import('./Globe3D'), {
     ssr: false,
-    loading: () => <div className='w-full h-full' />
+    loading: () => <div className="w-full h-full bg-black" />
 })
 
 
@@ -45,7 +45,7 @@ export default function Hero() {
 
                 {/* 3D Globe Container - Absolute Positioned */}
                 <div
-                    className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none overflow-visible"
+                    className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none overflow-hidden"
                     style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 40%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 40%)' }}
                 >
                     <div className="w-full h-full relative">
