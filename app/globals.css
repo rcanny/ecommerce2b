@@ -12,7 +12,9 @@
 html,
 body {
   max-width: 100vw;
+  width: 100%;
   position: relative;
+  /* Ajuda a conter elementos absolutos */
 }
 
 html {

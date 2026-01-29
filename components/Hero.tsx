@@ -4,12 +4,7 @@ import { useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { ArrowRight, Play } from 'lucide-react'
-
-const Globe3D = dynamic(() => import('./Globe3D'), {
-    ssr: false,
-    loading: () => <div className="w-full h-full bg-black" />
-})
-
+import HeroGlobeWrapper from './HeroGlobeWrapper'
 
 export default function Hero() {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -19,8 +14,8 @@ export default function Hero() {
     })
 
     const smoothProgress = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
+        stiffness: 150,
+        damping: 40,
         restDelta: 0.001
     })
 
@@ -40,8 +35,17 @@ export default function Hero() {
     return (
 
 
-        <div id="hero" ref={containerRef} className="relative h-[250dvh] bg-deep-onyx">
-            <div className="sticky top-0 h-[100dvh] overflow-hidden">
+        <div id="hero" ref={containerRef} className="relative h-[170svh] bg-transparent">
+            {/* Fixed Background Layer to prevent Mobile Jitter */}
+            <div
+                className="fixed inset-0 w-full h-[100svh] min-h-[100svh] z-[-1] bg-deep-onyx"
+                style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+            />
+
+            <div
+                className="sticky top-0 h-[100svh] min-h-[100svh] overflow-hidden"
+                style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+            >
 
                 {/* 3D Globe Container - Absolute Positioned */}
                 <div
@@ -49,7 +53,7 @@ export default function Hero() {
                     style={{ maskImage: 'linear-gradient(to right, transparent 0%, black 40%)', WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 40%)' }}
                 >
                     <div className="w-full h-full relative">
-                        <Globe3D scrollProgress={smoothProgress} />
+                        <HeroGlobeWrapper scrollProgress={smoothProgress} />
                     </div>
                 </div>
 

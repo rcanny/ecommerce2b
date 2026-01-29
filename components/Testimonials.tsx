@@ -3,10 +3,19 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import Image from 'next/image'
 import { Check } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 export default function Testimonials() {
     // --- 3D Tilt Logic ---
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
     const x = useMotionValue(0)
     const y = useMotionValue(0)
 
@@ -21,9 +30,12 @@ export default function Testimonials() {
 
     // Dynamic Sheen Position
     const sheenX = useTransform(xSpring, [-0.5, 0.5], ["-100%", "200%"])
-    const sheenOpacity = useTransform(xSpring, [-0.5, 0.5], [0, 0.5]) // Only visible when active? No, visible on move.
+
+    // On mobile, we might want to disable the sheen or make it auto-animate?
+    // User asked to remove interactive animation.
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (isMobile) return;
         const rect = e.currentTarget.getBoundingClientRect()
         const width = rect.width
         const height = rect.height
@@ -130,15 +142,15 @@ export default function Testimonials() {
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
 
-                            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                            onMouseMove={handleMouseMove}
-                            onMouseLeave={handleMouseLeave}
+                            style={isMobile ? { transform: "none" } : { rotateX, rotateY, transformStyle: "preserve-3d" }}
+                            onMouseMove={isMobile ? undefined : handleMouseMove}
+                            onMouseLeave={isMobile ? undefined : handleMouseLeave}
 
-                            className="relative group rounded-3xl preserve-3d cursor-default"
+                            className={`relative group rounded-3xl cursor-default ${isMobile ? 'antialiased' : 'preserve-3d'}`}
                         >
                             {/* Gradient Border Layer (Diamond Cut) */}
                             <div className="absolute inset-0 rounded-3xl p-[1px] bg-gradient-to-br from-white/60 via-white/5 to-action-green/10 pointer-events-none"
-                                style={{ transform: "translateZ(0px)" }} // Ensure it sticks
+                                style={{ transform: isMobile ? "none" : "translateZ(0px)" }} // Ensure it sticks
                             />
 
                             {/* Card Content Block */}
@@ -160,16 +172,16 @@ export default function Testimonials() {
                                 />
 
                                 {/* Decorative Quote */}
-                                <div className="absolute top-6 right-8 text-white/5 font-serif text-[10rem] leading-none select-none -z-10 font-bold" style={{ transform: "translateZ(-20px)" }}>
+                                <div className="absolute top-6 right-8 text-white/5 font-serif text-[10rem] leading-none select-none -z-10 font-bold" style={{ transform: isMobile ? "none" : "translateZ(-20px)" }}>
                                     &rdquo;
                                 </div>
 
-                                <div className="mb-8 relative z-10" style={{ transform: "translateZ(20px)" }}>
+                                <div className="mb-8 relative z-10" style={{ transform: isMobile ? "none" : "translateZ(20px)" }}>
                                     <h3 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-1">Empresa</h3>
                                     <p className="text-white font-semibold text-lg">Vale Automação Industrial</p>
                                 </div>
 
-                                <blockquote className="text-xl md:text-2xl text-gray-200 font-medium leading-relaxed mb-10 relative z-10" style={{ transform: "translateZ(30px)" }}>
+                                <blockquote className="text-xl md:text-2xl text-gray-200 font-medium leading-relaxed mb-10 relative z-10" style={{ transform: isMobile ? "none" : "translateZ(30px)" }}>
                                     &quot;A empresa E-commerce2b transformou o nosso E-commerce... crescemos
 
                                     <span
@@ -182,7 +194,7 @@ export default function Testimonials() {
                                     em menos de 6 meses.&quot;
                                 </blockquote>
 
-                                <div className="flex items-center gap-6 relative z-10" style={{ transform: "translateZ(40px)" }}>
+                                <div className="flex items-center gap-6 relative z-10" style={{ transform: isMobile ? "none" : "translateZ(40px)" }}>
                                     <div className="w-20 h-20 rounded-full border-2 border-action-green/50 p-1 relative overflow-hidden flex-shrink-0">
                                         <Image
                                             src="/assets/jonathan-russi.jpg"

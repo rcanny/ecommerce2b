@@ -60,7 +60,7 @@ export default function Method() {
                             style={isMobile ? {} : { opacity: layer1Opacity, scale: layer1Scale, filter: layer1Blur }}
                             className={`${isMobile ? 'relative opacity-100' : 'absolute inset-0 flex items-center justify-center w-full'}`}
                         >
-                            <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter whitespace-nowrap px-4 text-center">
+                            <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter md:whitespace-nowrap px-4 text-center">
                                 Estruturamos sua presença digital
                             </h2>
                         </motion.div>
@@ -70,7 +70,7 @@ export default function Method() {
                             style={isMobile ? {} : { opacity: layer2Opacity, scale: layer2Scale, filter: layer2Blur }}
                             className={`${isMobile ? 'relative opacity-100' : 'absolute inset-0 flex items-center justify-center w-full'}`}
                         >
-                            <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter whitespace-nowrap px-4 text-center">
+                            <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter md:whitespace-nowrap px-4 text-center">
                                 Performance e foco total em vendas
                             </h2>
                         </motion.div>
@@ -80,7 +80,7 @@ export default function Method() {
                             style={isMobile ? {} : { opacity: layer3Opacity, scale: layer3Scale, filter: layer3Blur, y: layer3Y }}
                             className={`${isMobile ? 'relative opacity-100' : 'absolute inset-0 flex items-center justify-center w-full'}`}
                         >
-                            <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter whitespace-nowrap px-4 text-center">
+                            <h2 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter md:whitespace-nowrap px-4 text-center">
                                 Nosso foco é ajudar negócios como o seu a saírem do offline
                             </h2>
                         </motion.div>
