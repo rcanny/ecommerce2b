@@ -19,10 +19,6 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "E-commerce2b | Conectando seu negócio ao mundo digital",
   description: "Conectando seu negócio ao mundo digital",
-  icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
-  },
 };
 
 export default function RootLayout({

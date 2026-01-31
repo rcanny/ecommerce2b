@@ -50,29 +50,30 @@ export default function Hero() {
     })
 
     const smoothProgress = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
+        stiffness: 60,
+        damping: 20,
+        mass: 0.5,
         restDelta: 0.001
     })
 
     // Text transforms - Scene 1 (Hero)
-    const opacity1 = useTransform(smoothProgress, [0, 0.2, 0.35], [1, 1, 0])
+    const opacity1 = useTransform(smoothProgress, [0, 0.2, 0.3], [1, 1, 0])
     // Parallax effect: moves up slightly as user scrolls, creating depth
-    const y1 = useTransform(smoothProgress, [0, 0.35], [0, -50])
-    const pointerEvents1 = useTransform(smoothProgress, (val) => val > 0.35 ? 'none' : 'auto')
+    const y1 = useTransform(smoothProgress, [0, 0.3], [0, -50])
+    const pointerEvents1 = useTransform(smoothProgress, (val) => val > 0.3 ? 'none' : 'auto')
 
     // Scene 2
-    const opacity2 = useTransform(smoothProgress, [0.2, 0.35, 0.65, 0.8], [0, 1, 1, 0])
-    const y2 = useTransform(smoothProgress, [0.2, 0.35, 0.65, 0.8], [50, 0, 0, -50])
-    const pointerEvents2 = useTransform(smoothProgress, (val) => (val > 0.2 && val < 0.8) ? 'auto' : 'none')
+    const opacity2 = useTransform(smoothProgress, [0.25, 0.35, 0.55, 0.65], [0, 1, 1, 0])
+    const y2 = useTransform(smoothProgress, [0.25, 0.35, 0.55, 0.65], [50, 0, 0, -50])
+    const pointerEvents2 = useTransform(smoothProgress, (val) => (val > 0.25 && val < 0.65) ? 'auto' : 'none')
 
     // Scene 3
-    const opacity3 = useTransform(smoothProgress, [0.65, 0.8, 1], [0, 1, 1])
-    const y3 = useTransform(smoothProgress, [0.65, 0.8, 1], [50, 0, 0])
-    const pointerEvents3 = useTransform(smoothProgress, (val) => val > 0.65 ? 'auto' : 'none')
+    const opacity3 = useTransform(smoothProgress, [0.6, 0.7, 1], [0, 1, 1])
+    const y3 = useTransform(smoothProgress, [0.6, 0.7, 1], [50, 0, 0])
+    const pointerEvents3 = useTransform(smoothProgress, (val) => val > 0.6 ? 'auto' : 'none')
 
     return (
-        <div id="hero" ref={containerRef} className="relative h-[180svh] bg-transparent" style={{ touchAction: 'pan-y' }}>
+        <div id="hero" ref={containerRef} className="relative h-[400vh] bg-transparent" style={{ touchAction: 'pan-y' }}>
             {/* Fixed Background Layer to prevent Mobile Jitter */}
             <div
                 className="fixed inset-0 w-full h-[100svh] min-h-[100svh] z-[-1] bg-deep-onyx"
@@ -105,12 +106,12 @@ export default function Hero() {
                 <div className="container mx-auto h-full relative z-20 pointer-events-none">
                     <div className="h-full flex flex-col justify-center lg:w-1/2 px-6 lg:px-0">
 
-                        {/* SCENE 1: 0% - 20% */}
+                        {/* SCENE 1: E-COMMERCE DO FUTURO */}
                         <motion.div
-                            style={{ opacity: opacity1, y: y1, pointerEvents: pointerEvents1, willChange: "transform", contain: "paint" }}
-                            className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
+                            style={{ opacity: opacity1, y: y1, pointerEvents: pointerEvents1, willChange: "transform, opacity" }}
+                            className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 lg:px-0"
                         >
-                            <h1 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
+                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
                                 E-commerce
                                 <span className="block text-logo-blue drop-shadow-[0_0_15px_rgba(66,114,240,0.5)]">
                                     Do Futuro
@@ -149,12 +150,12 @@ export default function Hero() {
                             </div>
                         </motion.div>
 
-                        {/* SCENE 2: 25% - 75% */}
+                        {/* SCENE 2: ENGENHARIA DE PERFORMANCE */}
                         <motion.div
-                            style={{ opacity: opacity2, y: y2, pointerEvents: pointerEvents2, willChange: "transform", contain: "paint" }}
-                            className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
+                            style={{ opacity: opacity2, y: y2, pointerEvents: pointerEvents2, willChange: "transform, opacity" }}
+                            className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 lg:px-0"
                         >
-                            <h2 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
+                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
                                 Engenharia de
                                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
                                     Performance
@@ -165,12 +166,12 @@ export default function Hero() {
                             </p>
                         </motion.div>
 
-                        {/* SCENE 3: 80% - 100% */}
+                        {/* SCENE 3: PRONTO PARA CONSTRUIR */}
                         <motion.div
-                            style={{ opacity: opacity3, y: y3, pointerEvents: pointerEvents3, willChange: "transform", contain: "paint" }}
-                            className="absolute inset-0 flex flex-col justify-center px-10 md:px-12 lg:px-0"
+                            style={{ opacity: opacity3, y: y3, pointerEvents: pointerEvents3, willChange: "transform, opacity" }}
+                            className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 lg:px-0"
                         >
-                            <h2 className="text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
+                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
                                 Pronto para
                                 <span className="block text-action-green drop-shadow-[0_0_15px_rgba(108,201,45,0.5)]">
                                     Construir?
