@@ -57,43 +57,29 @@ export default function Contact() {
         e.preventDefault()
         setStatus('loading')
 
-        const payload = {
-            nome: `${formData.nome} ${formData.sobrenome}`.trim(),
-            email: formData.email,
-            telefone: formData.telefone,
-            mensagem: `Empresa: ${formData.empresa}\nSite: ${formData.site}\n\n${formData.mensagem}`
-        }
-
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbx6fErX1GVuWiFcnWlZREpQiS19BHXgy3_Jnd6JtsbS6Ic7wTFf6c3pwT2LOqytyaI3dw/exec', {
-                method: 'POST', // Usually GAS uses POST
+            await fetch("https://script.google.com/macros/s/AKfycbznVXZEAWzQ8YEx-axW1v7ISpfXDqV_SHRX-UvxIM0GiCaQNeM-g-KByODB595vtS759A/exec", {
+                method: "POST",
+                mode: "no-cors",
                 headers: {
-                    'Content-Type': 'text/plain', // Avoid CORS preflight options request
+                    "Content-Type": "text/plain",
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(formData),
+            });
+
+            setStatus('success')
+            setFormData({
+                nome: '',
+                sobrenome: '',
+                email: '',
+                empresa: '',
+                telefone: '',
+                site: '',
+                mensagem: ''
             })
 
-            // Google Apps Script usually returns a 200 even on some script logic errors, 
-            // but fetch will throw on network errors.
-            // Check if response is ok.
-            if (response.ok) {
-                setStatus('success')
-                setFormData({
-                    nome: '',
-                    sobrenome: '',
-                    email: '',
-                    empresa: '',
-                    telefone: '',
-                    site: '',
-                    mensagem: ''
-                })
-                // Reset success message after 5 seconds to allow new submissions if needed
-                setTimeout(() => setStatus('idle'), 5000)
-            } else {
-                setStatus('error')
-            }
         } catch (error) {
-            console.error('Error submitting form:', error)
+            console.error("Erro no envio:", error);
             setStatus('error')
         }
     }
@@ -187,14 +173,13 @@ export default function Contact() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm text-gray-400 font-medium ml-1">Site <span className="text-action-green">*</span></label>
+                            <label className="text-sm text-gray-400 font-medium ml-1">Site</label>
                             <input
                                 name="site"
                                 value={formData.site}
                                 onChange={handleChange}
                                 type="url"
-                                required
-                                placeholder="https://seu-site.com"
+                                placeholder="https://seu-site.com (Opcional)"
                                 disabled={status === 'loading'}
                                 className="w-full h-14 px-6 rounded-2xl bg-white/[0.03] border border-white/10 text-white placeholder-[#A1A1AA] focus:outline-none focus:border-[#6CC92D] focus:shadow-[0_0_15px_rgba(108,201,45,0.2)] transition-all duration-300 disabled:opacity-50"
                             />
